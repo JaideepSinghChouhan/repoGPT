@@ -1,22 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
-);
+import { requireUser } from "@/lib/auth/requireUser";
 
 export async function GET() {
-  const { data, error } = await supabase
-    .from("repo_chunks")
-    .select("*")
-    .limit(1);
+  const user = await requireUser();
 
-  return Response.json({
-    connected: !error,
-    error,
-    data,
-  });
+  return Response.json(user);
 }

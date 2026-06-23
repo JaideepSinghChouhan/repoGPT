@@ -1,18 +1,27 @@
+import { requireUser } from "@/lib/auth/requireUser";
 import { indexRepository } from "@/lib/ingestion/indexRepository";
+import { getCurrentUser } from "@/lib/users/getCurrentUser";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { repoUrl, userId } = await request.json();
-
-    if (!repoUrl || !userId) {
+    const { repoUrl} = await request.json();
+    const currentUser = await requireUser();
+        if (!currentUser) {
       return NextResponse.json(
-        { error: "Repository URL and user ID are required" },
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    if (!repoUrl) {
+      return NextResponse.json(
+        { error: "Repository URL is required" },
         { status: 400 }
       );
     }
 
-    const result = await indexRepository(repoUrl,userId);
+    const result = await indexRepository(repoUrl,currentUser.id );
 
     return NextResponse.json(result);
   } catch (error: any) {

@@ -1,15 +1,34 @@
-import { askRepo } from "@/lib/rag/chat";
+import { requireUser } from "@/lib/auth/requireUser";
 
-export async function POST(request: Request) {
+import { assertRepositoryAccess }
+from "@/lib/repositories/assertRepositoryAccess";
+
+import { assertConversationAccess }
+from "@/lib/conversations/assertConversationAccess";
+
+import { sendMessage }
+from "@/lib/chat/sendMessage";
+
+export async function POST(
+  request: Request
+) {
   try {
-    const body = await request.json();
-    const { question, repositoryId } = body;
 
-    if (!question || !repositoryId) {
+    const {
+      question,
+      repositoryId,
+      conversationId,
+    } = await request.json();
+
+    if (
+      !question ||
+      !repositoryId ||
+      !conversationId
+    ) {
       return Response.json(
         {
           error:
-            "question and repositoryId are required",
+            "question, repositoryId and conversationId are required",
         },
         {
           status: 400,
@@ -17,14 +36,62 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await askRepo(
-      question,
-      repositoryId
+    const currentUser =
+      await requireUser();
+
+    await assertRepositoryAccess(
+      repositoryId,
+      currentUser.id
     );
 
-    return Response.json(result);
-  } catch (error) {
+    await assertConversationAccess(
+      conversationId,
+      currentUser.id
+    );
+
+    const result =
+      await sendMessage(
+        conversationId,
+        repositoryId,
+        question
+      );
+
+    return Response.json(
+      result
+    );
+
+  } catch (error: any) {
+
     console.error(error);
+
+    if (
+      error.message ===
+      "Forbidden"
+    ) {
+      return Response.json(
+        {
+          error: "Forbidden",
+        },
+        {
+          status: 403,
+        }
+      );
+    }
+
+    if (
+      error.message ===
+      "Unauthorized"
+    ) {
+      return Response.json(
+        {
+          error:
+            "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
 
     return Response.json(
       {

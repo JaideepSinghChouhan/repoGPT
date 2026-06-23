@@ -21,6 +21,13 @@ export async function getConversation(
         )
       `)
       .eq("id", conversationId)
+      .order(
+        "created_at",
+        {
+         foreignTable: "messages",
+        ascending: true,
+        }
+        )
       .single();
 
   if (error) {
