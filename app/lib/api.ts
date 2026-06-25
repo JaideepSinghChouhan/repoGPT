@@ -111,7 +111,7 @@ export async function sendMessage(
 
   if (!response.ok) {
         const error =
-          await res.json();
+          await response.json();
 
         throw new Error(
           error.error ||
