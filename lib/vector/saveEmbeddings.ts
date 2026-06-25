@@ -15,6 +15,15 @@ export async function saveChunks(
     embedding: chunk.embedding,
   }));
 
+  console.log("Type:", Array.isArray(rows[0].embedding));
+
+  console.log(
+  "First element is array:",
+  Array.isArray(rows[0].embedding[0])
+  );
+
+console.log(rows[0].embedding);
+
   const { error } = await supabaseAdmin
     .from("repo_chunks")
     .insert(rows);

@@ -11,8 +11,11 @@ export async function retrieveChunks(
 ) {
 //   console.log("QUERY:", query);
 // console.log("TYPE:", typeof query);
-  const queryEmbedding =
+  const queryEmbeddings =
     await createEmbeddings([query]);
+
+    const queryEmbedding =
+    queryEmbeddings[0];
 
     const { data, error } =
     await supabaseAdmin.rpc(
