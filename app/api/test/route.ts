@@ -1,7 +1,15 @@
-import { requireUser } from "@/lib/auth/requireUser";
+import { NextResponse } from "next/server";
+import { createEmbeddings } from "@/lib/embeddings/embeddings";
 
 export async function GET() {
-  const user = await requireUser();
+  const vectors = await createEmbeddings([
+    "Hello world",
+    "React is awesome",
+    "Next.js App Router",
+  ]);
 
-  return Response.json(user);
+  return NextResponse.json({
+    count: vectors.length,
+    dimensions: vectors[0]?.length,
+  });
 }

@@ -1,4 +1,4 @@
-import { createEmbedding }
+import { createEmbeddings }
 from "../embeddings/embeddings";
 
 import { supabaseAdmin }
@@ -12,7 +12,7 @@ export async function retrieveChunks(
 //   console.log("QUERY:", query);
 // console.log("TYPE:", typeof query);
   const queryEmbedding =
-    await createEmbedding(query);
+    await createEmbeddings([query]);
 
     const { data, error } =
     await supabaseAdmin.rpc(
