@@ -31,7 +31,7 @@ export async function saveChunks(
     await saveChunk(chunk);
   }
 
-  console.log(
-    `Saved ${chunks.length} chunks`
-  );
+  // console.log(
+  //   `Saved ${chunks.length} chunks`
+  // );
 }

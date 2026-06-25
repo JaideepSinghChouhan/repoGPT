@@ -17,7 +17,7 @@ export async function askRepo(question: string, repositoryId: string) {
 const result =
   await generateAnswer(prompt);
 
-console.log(chunks[0]);
+// console.log(chunks[0]);
 return {
   answer: result.answer,
   model: result.model,

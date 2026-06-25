@@ -13,7 +13,7 @@ export async function scanRepo(rootDir: string): Promise<Repofile[]> {
 
   async function walk(dir: string) {
     const entries = await fs.readdir(dir, { withFileTypes: true });
-    console.log(`Scanning directory: ${dir}`);
+    // console.log(`Scanning directory: ${dir}`);
     for (const entry of entries) {
     //   console.log({
     //     name: entry.name,

@@ -1,14 +1,13 @@
 import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
 import path from 'path'
 import fs from 'fs/promises'
-
+import os from 'os'
 const git: SimpleGit = simpleGit();
 
 export async function cloneRepo(repoUrl: string): Promise<string> {
     const repoName = repoUrl.split('/').pop()?.replace('.git', '');
     const clonePath = path.join(
-        process.cwd(),
-        "repos",
+        os.tmpdir(),
         repoName!
     )
     try{

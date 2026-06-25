@@ -9,8 +9,8 @@ export async function retrieveChunks(
   repositoryId: string,
   k = 5
 ) {
-  console.log("QUERY:", query);
-console.log("TYPE:", typeof query);
+//   console.log("QUERY:", query);
+// console.log("TYPE:", typeof query);
   const queryEmbedding =
     await createEmbedding(query);
 

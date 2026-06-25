@@ -13,9 +13,9 @@ export async function generateAnswer(
 
   for (const model of MODELS) {
     try {
-      console.log(
-        `Trying model: ${model}`
-      );
+      // console.log(
+      //   `Trying model: ${model}`
+      // );
 
       const response =
         await ai.models.generateContent({
@@ -23,9 +23,9 @@ export async function generateAnswer(
           contents: prompt,
         });
 
-      console.log(
-        `Success with ${model}`
-      );
+      // console.log(
+      //   `Success with ${model}`
+      // );
 
       return {
         answer: response.text,

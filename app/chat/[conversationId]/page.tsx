@@ -57,7 +57,7 @@ export default function ChatPage() {
         timestamp: new Date(message.created_at).toLocaleString(),
       })),
     };
-    console.log(data.messages[data.messages.length - 1]);
+    // console.log(data.messages[data.messages.length - 1]);
 
     setConversation(formattedConversation);
 

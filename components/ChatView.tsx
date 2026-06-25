@@ -285,7 +285,7 @@ export default function ChatView({
 
                                     <pre className="mt-2 overflow-x-auto rounded-lg bg-black/30 p-3 text-xs font-mono">
                                       {source.content}
-                                      {console.log("Source content:", source.content)}
+                                      {/* {console.log("Source content:", source.content)} */}
                                     </pre>
                                   </details>
                                 </div>
