@@ -63,7 +63,7 @@ export async function POST(
   } catch (error: any) {
 
     console.error(error);
-
+    
     if (
       error.message ===
       "Forbidden"
@@ -77,7 +77,7 @@ export async function POST(
         }
       );
     }
-
+    
     if (
       error.message ===
       "Unauthorized"
@@ -93,13 +93,49 @@ export async function POST(
       );
     }
 
+          if (
+        error?.cause?.code ===
+        "UND_ERR_CONNECT_TIMEOUT"
+      ) {
+        return Response.json(
+          {
+            error:
+              "Authentication service is taking too long to respond. Please try again in a few moments.",
+          },
+          {
+            status: 503,
+          }
+        );
+      }
+
+      if (
+  error?.status === 429 ||
+  error?.message?.includes(
+    "RESOURCE_EXHAUSTED"
+  ) ||
+  error?.message?.includes(
+    "Quota exceeded"
+  )
+) {
+  return Response.json(
+    {
+      error:
+        "AI model quota exceeded. Please try again later.",
+    },
+    {
+      status: 429,
+    }
+  );
+}
+
+
     return Response.json(
       {
         error:
-          "Failed to process question",
+          "Authentication service temporarily unavailable",
       },
       {
-        status: 500,
+        status: 503,
       }
     );
   }

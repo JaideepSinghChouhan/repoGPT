@@ -1,5 +1,3 @@
-
-
 import { cloneRepo } from "@/lib/github/cloneRepo";
 import { scanRepo } from "@/lib/github/scanRepo";
 
@@ -9,51 +7,51 @@ import { saveChunks } from "@/lib/vector/saveEmbeddings";
 
 import { embedChunks } from "@/lib/embeddings/embedChunks";
 import { createRepository } from "../repositories/createRepository";
+import { updateRepository } from "./updateRepository";
+import { removeRepo } from "./removeRepo";
 
-function extractRepoName(
-  repoUrl: string
-) {
-  return repoUrl
-    .split("/")
-    .pop()
-    ?.replace(".git", "") ?? "unknown";
+function extractRepoName(repoUrl: string) {
+  return repoUrl.split("/").pop()?.replace(".git", "") ?? "unknown";
 }
 
-export async function indexRepository(
-  repoUrl: string,
-  userId: string
-) {
+export async function indexRepository(repoUrl: string, userId: string) {
   const repoPath = await cloneRepo(repoUrl);
 
-  const files =
-    await scanRepo(repoPath);
+  const repoName = extractRepoName(repoUrl);
 
-  const chunks =
-    chunkFiles(files);
+  const repository = await createRepository(repoName, repoUrl, userId);
 
-const repoName =
-  extractRepoName(repoUrl);
+  try {
+    const files = await scanRepo(repoPath);
 
-const repository =
-  await createRepository(
-    repoName,
-    repoUrl,
-    userId
-  );
+    const chunks = chunkFiles(files);
+    const embeddedChunks = await embedChunks(chunks, repository.id);
 
-  const embeddedChunks =
-    await embedChunks(
-      chunks,
-      repository.id
-    );
+    await saveChunks(embeddedChunks);
 
-  await saveChunks(
-    embeddedChunks
-  );
+    await updateRepository(repository.id, {
+      status: "completed",
+      chunkCount: chunks.length,
+      indexedAt: new Date().toISOString(),
+      errorMessage: null,
+    });
 
-  return {
-    repoName,
-    files: files.length,
-    chunks: chunks.length,
-  };
+    return {
+      repoName,
+      files: files.length,
+      chunks: chunks.length,
+    };
+  } catch (error) {
+    await updateRepository(repository.id, {
+      status: "failed",
+      chunkCount: 0,
+      indexedAt: null,
+      errorMessage:
+        error instanceof Error ? error.message : "Unknown indexing error",
+    });
+    throw error;
+  }
+  finally{
+    await removeRepo(repoPath);
+  }
 }

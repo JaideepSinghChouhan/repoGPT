@@ -6,8 +6,14 @@ export async function embedChunks(
   repositoryId: string
 ) {
   const embeddedChunks = [];
-
-  for (const chunk of chunks) {
+  
+for (const chunk of chunks) {
+  if (!chunk.content.trim()) {
+    console.warn(
+      `Skipping empty chunk: ${chunk.filePath}`
+    );
+    continue;
+  }
     const embedding = await createEmbedding(
       chunk.content
     );

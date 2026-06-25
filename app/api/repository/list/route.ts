@@ -1,19 +1,23 @@
 import { listRepositories } from "@/lib/repositories/listRepositories";
+import { getCurrentUser } from "@/lib/users/getCurrentUser";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
+    const currentUser =
+      await getCurrentUser();
 
-    if (!userId) {
+    if (!currentUser) {
       return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
+        { error: "Unauthorized" },
+        { status: 401 }
       );
     }
 
-    const repositories = await listRepositories(userId);
+    const repositories =
+      await listRepositories(
+        currentUser.id
+      );
 
     return NextResponse.json(
       repositories

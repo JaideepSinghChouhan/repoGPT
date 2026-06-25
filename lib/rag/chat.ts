@@ -14,21 +14,25 @@ export async function askRepo(question: string, repositoryId: string) {
 
   const prompt = createPrompt(question, context);
 
-  const answer = await generateAnswer(prompt);
+const result =
+  await generateAnswer(prompt);
 
-  return {
-    answer,
+console.log(chunks[0]);
+return {
+  answer: result.answer,
+  model: result.model,
 
-    sources: chunks.map(
-      (
-        chunk: RetrievedChunk
-      ) => ({
-        file: chunk.file_path,
-        startLine:
-          chunk.start_line,
-        endLine:
-          chunk.end_line,
-      })
-    ),
-  };
+  sources: chunks
+    .slice(0, 3)
+    .map(
+    (chunk: RetrievedChunk) => ({
+      file: chunk.file_path,
+      startLine:
+        chunk.start_line,
+      endLine:
+        chunk.end_line,
+      content: chunk.content,
+    })
+  ),
+};
 }

@@ -1,34 +1,13 @@
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
+// app/test-auth/page.tsx
 
-export default async function TestPage() {
-  const cookieStore = await cookies();
+import { getCurrentUser } from "@/lib/users/getCurrentUser";
 
-  const supabase = createClient(cookieStore);
-
-  const { data: todos, error } = await supabase
-    .from("todos")
-    .select("*");
-    console.log("todos", todos);
-
-  if (error) {
-    return (
-      <div>
-        <h1>Error</h1>
-        <pre>{JSON.stringify(error, null, 2)}</pre>
-      </div>
-    );
-  }
+export default async function TestAuth() {
+  const user = await getCurrentUser();
 
   return (
-    <div>
-      <h1>Supabase Connected ✅</h1>
-
-      <ul>
-        {todos?.map((todo) => (
-          <li key={todo.id}>{todo.name}</li>
-        ))}
-      </ul>
-    </div>
+    <pre>
+      {JSON.stringify(user, null, 2)}
+    </pre>
   );
 }

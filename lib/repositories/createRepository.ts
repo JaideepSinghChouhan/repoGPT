@@ -12,6 +12,10 @@ export async function createRepository(
       name,
       github_url: githubUrl,
       user_id: userId,
+      status: "indexing",
+      chunk_count: 0,
+      indexed_at: null,
+      error_message: null,
     })
     .select()
     .single();

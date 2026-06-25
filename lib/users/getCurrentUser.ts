@@ -8,11 +8,16 @@ from "@/lib/admin";
 export async function getCurrentUser() {
 
   const supabase = createClient(await cookies());
-
+  console.time("auth");
+ 
+ try{
   const {
     data: { user },
+    error,
   } =
     await supabase.auth.getUser();
+
+    console.timeEnd("auth");
 
   if (!user) {
     return null;
@@ -29,4 +34,9 @@ export async function getCurrentUser() {
       .single();
 
   return data;
+  }
+  catch (error) {
+    console.error("Error fetching current user:", error);
+    throw new Error("Supabase Auth Unavailable");
+  }
 }

@@ -4,37 +4,109 @@ from "@/lib/repositories/deleteRepositories";
 import { NextResponse }
 from "next/server";
 
+import { getRepository }
+from "@/lib/repositories/getRepository";
+
+import { requireUser }
+from "@/lib/auth/requireUser";
+
 interface Props {
   params: Promise<{
     id: string;
   }>;
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: Props
+
+
+
+export async function GET(
+  request: Request,
+  {
+    params,
+  }: {
+    params: Promise<{
+      id: string;
+    }>;
+  }
 ) {
   try {
+    await requireUser();
+
     const { id } =
       await params;
 
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
+    const repository =
+      await getRepository(id);
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
-      );
-    }
+    return NextResponse.json(
+      repository
+    );
+  } catch (error) {
+    console.error(error);
 
-    await deleteRepository(id, userId);
+    return NextResponse.json(
+      {
+        error:
+          "Failed to fetch repository",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: Props
+) {
+  try {
+    const currentUser =
+      await requireUser();
+
+    const { id } =
+      await params;
+
+    await deleteRepository(
+      id,
+      currentUser.id
+    );
 
     return NextResponse.json({
       success: true,
     });
-  } catch (error) {
+
+  } catch (error: any) {
+
     console.error(error);
+
+    if (
+      error.message ===
+      "Unauthorized"
+    ) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+
+    if (
+      error.message ===
+      "Forbidden"
+    ) {
+      return NextResponse.json(
+        {
+          error: "Forbidden",
+        },
+        {
+          status: 403,
+        }
+      );
+    }
 
     return NextResponse.json(
       {

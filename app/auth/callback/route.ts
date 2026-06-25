@@ -25,6 +25,6 @@ export async function GET(
   }
 
   return NextResponse.redirect(
-    new URL("/", request.url)
+    new URL("/dashboard", request.url)
   );
 }

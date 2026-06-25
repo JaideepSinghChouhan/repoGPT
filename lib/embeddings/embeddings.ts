@@ -13,6 +13,11 @@ const ai = new GoogleGenAI({
 export async function createEmbedding(
   text: string
 ) {
+    if (!text.trim()) {
+    throw new Error(
+      "Attempted to embed empty text."
+    );
+    }
   const result =
     await ai.models.embedContent({
       model: "gemini-embedding-001",

@@ -1,12 +1,10 @@
 import { supabaseAdmin } from "@/lib/admin";
 
-export async function getConversation(
-  conversationId: string
-) {
-  const { data, error } =
-    await supabaseAdmin
-      .from("conversations")
-      .select(`
+export async function getConversation(conversationId: string) {
+  const { data, error } = await supabaseAdmin
+    .from("conversations")
+    .select(
+      `
         *,
         repositories (
           id,
@@ -14,21 +12,20 @@ export async function getConversation(
           github_url
         ),
         messages (
-          id,
-          role,
-          content,
-          created_at
+        id,
+        role,
+        content,
+        created_at,
+        sources
         )
-      `)
-      .eq("id", conversationId)
-      .order(
-        "created_at",
-        {
-         foreignTable: "messages",
-        ascending: true,
-        }
-        )
-      .single();
+        `,
+    )
+    .eq("id", conversationId)
+    .order("created_at", {
+      foreignTable: "messages",
+      ascending: true,
+    })
+    .single();
 
   if (error) {
     throw error;
