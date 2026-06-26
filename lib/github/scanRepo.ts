@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 
 import { ALLOWED_EXTENSIONS, IGNORED_DIRS, IGNORED_FILES } from "../ingestion/filters";
-
+import { Repofile } from "../../types/repo";
 
 
 export async function scanRepo(rootDir: string): Promise<Repofile[]> {
