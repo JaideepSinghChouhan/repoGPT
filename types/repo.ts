@@ -1,4 +1,4 @@
-export interface RepoFile {
+export interface Repofile {
   filePath: string;
   content: string;
 }

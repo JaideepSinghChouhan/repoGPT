@@ -3,10 +3,7 @@ import path from "path";
 
 import { ALLOWED_EXTENSIONS, IGNORED_DIRS, IGNORED_FILES } from "../ingestion/filters";
 
-export interface Repofile {
-  filePath: string;
-  content: string;
-}
+
 
 export async function scanRepo(rootDir: string): Promise<Repofile[]> {
   const files: Repofile[] = [];
