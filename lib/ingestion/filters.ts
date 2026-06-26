@@ -33,7 +33,10 @@ export const ALLOWED_EXTENSIONS = [
   ".go",
   ".rs",
   ".md",
-  "*.min.js",
-  "*.map",
-  "*.snap"
+];
+
+export const IGNORED_EXTENSIONS = [
+  ".min.js",
+  ".map",
+  ".snap",
 ];

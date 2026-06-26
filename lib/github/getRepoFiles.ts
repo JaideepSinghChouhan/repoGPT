@@ -4,6 +4,7 @@ import {
   ALLOWED_EXTENSIONS,
   IGNORED_DIRS,
   IGNORED_FILES,
+  IGNORED_EXTENSIONS,
 } from "../ingestion/filters";
 
 export interface RepoFile {
@@ -69,6 +70,14 @@ const branch =
 
     if (
       !ALLOWED_EXTENSIONS.includes(extension)
+    ) {
+      return false;
+    }
+
+    if (
+      IGNORED_EXTENSIONS.some(ext =>
+        item.path.endsWith(ext)
+      )
     ) {
       return false;
     }

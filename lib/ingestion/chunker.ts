@@ -1,4 +1,4 @@
-import { Repofile } from "../github/scanRepo";
+import { Repofile } from "../github/scanRepo.ts";
 import { CodeChunk } from "../../types/chunk";
 
 export function chunkFiles(
