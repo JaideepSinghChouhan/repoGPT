@@ -1,3 +1,5 @@
+//This is just a test page for login, you can remove it if you want to implement your own login page
+
 "use client";
 
 import createClient from "@/utils/supabase/client";
@@ -14,7 +16,7 @@ export default function LoginPage() {
       },
     });
   };
-
+  
   return (
     <button
       onClick={handleLogin}

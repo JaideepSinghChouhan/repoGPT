@@ -52,7 +52,7 @@ const supabase = createServerClient(
 );
 
 // IMPORTANT
-// await supabase.auth.getUser();
+await supabase.auth.getUser();
 
 return supabaseResponse;
 };
